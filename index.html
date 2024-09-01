@@ -8,8 +8,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>Organizzatore di Vacanze</h1>
-        <div id="vacationForm" class="vacation-form">
+        <header>
+            <button id="showForm">Aggiungi Nuovo Viaggio</button>
+            <button id="showPlans">Visualizza Piani Salvati</button>
+        </header>
+
+        <div id="vacationForm" class="page">
+            <h1>Organizzatore di Vacanze</h1>
             <label for="destination">Destinazione:</label>
             <input type="text" id="destination" placeholder="Inserisci la destinazione">
 
@@ -20,13 +25,12 @@
             <input type="number" id="duration" min="1">
 
             <button id="createPlan">Crea Piano Vacanza</button>
-            <button id="viewPlans">Visualizza Piani Salvati</button>
         </div>
 
-        <div id="savedPlansContainer" class="hidden">
+        <div id="savedPlansContainer" class="page hidden">
             <h2>Piani Salvati</h2>
-            <button id="closeSavedPlans">Chiudi</button>
             <div id="savedPlans"></div>
+            <button id="closeSavedPlans">Chiudi</button>
         </div>
     </div>
 

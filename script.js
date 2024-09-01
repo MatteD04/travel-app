@@ -1,11 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('createPlan').addEventListener('click', createPlan);
-    document.getElementById('viewPlans').addEventListener('click', viewSavedPlans);
-    document.getElementById('closeSavedPlans').addEventListener('click', function() {
-        document.getElementById('savedPlansContainer').classList.add('hidden');
-    });
+    document.getElementById('showForm').addEventListener('click', showForm);
+    document.getElementById('showPlans').addEventListener('click', showPlans);
+    document.getElementById('closeSavedPlans').addEventListener('click', closeSavedPlans);
 
-    // Eventi per i modali
     const modal = document.getElementById('modal');
     const closeButton = document.querySelector('.close-button');
     closeButton.addEventListener('click', () => {
@@ -27,6 +25,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+function showForm() {
+    document.getElementById('vacationForm').classList.add('show');
+    document.getElementById('savedPlansContainer').classList.remove('show');
+}
+
+function showPlans() {
+    viewSavedPlans();
+    document.getElementById('vacationForm').classList.remove('show');
+    document.getElementById('savedPlansContainer').classList.add('show');
+}
+
+function closeSavedPlans() {
+    document.getElementById('savedPlansContainer').classList.remove('show');
+}
 
 function createPlan() {
     const destination = document.getElementById('destination').value.trim();
@@ -51,6 +64,11 @@ function createPlan() {
     };
 
     savePlan(plan);
+
+    // Svuota il modulo dopo aver creato e salvato il piano
+    document.getElementById('destination').value = '';
+    document.getElementById('startDate').value = '';
+    document.getElementById('duration').value = '';
 }
 
 function addTappa(planId, dayNumber) {
@@ -103,6 +121,7 @@ function savePlan(plan) {
     savedPlans.push(plan);
     localStorage.setItem('vacationPlans', JSON.stringify(savedPlans));
     alert('Piano vacanza salvato con successo!');
+    showForm(); // Torna al modulo dopo aver salvato
 }
 
 function viewSavedPlans() {
@@ -122,6 +141,7 @@ function viewSavedPlans() {
         planDiv.className = 'day-plan';
         planDiv.innerHTML = `
             <h2>${plan.destination} - Inizia il ${plan.startDate}</h2>
+            <button onclick="deletePlan(${plan.id})" class="delete-button">&times;</button>
             ${Array.isArray(plan.days) ? plan.days.map(day => `
                 <div class="day-plan">
                     <h3>Giorno ${day.dayNumber} - ${day.date}</h3>
@@ -137,8 +157,13 @@ function viewSavedPlans() {
         `;
         savedPlansDiv.appendChild(planDiv);
     });
+}
 
-    savedPlansContainer.classList.remove('hidden');
+function deletePlan(planId) {
+    let savedPlans = JSON.parse(localStorage.getItem('vacationPlans')) || [];
+    savedPlans = savedPlans.filter(plan => plan.id !== planId);
+    localStorage.setItem('vacationPlans', JSON.stringify(savedPlans));
+    viewSavedPlans(); // Ricarica i piani salvati dopo la cancellazione
 }
 
 function viewTappaDetails(planId, dayNumber, tappaId) {
